@@ -6,7 +6,6 @@
 #include <tf2attributes>
 #include <morecolors>
 
-
 new bool:onlymelee[MAXPLAYERS+1];
 
 public Plugin myinfo =
@@ -26,33 +25,28 @@ public OnPluginStart()
 
 public Action:PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 {
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
-	
+	new client = GetClientOfUserId(GetEventInt(event, "userid"));	
 	onlymelee[client] = false;
 	TF2_RemoveCondition(client, TFCond_MeleeOnly);
 }
 
 public Action:SpawnTimer(Handle:timer, any:client)
 {
-	
 	if (!IsClientInGame(client))
 		return;
-		
 	onlymelee[client] = false;
 }
 
 public Zone_OnClientEntry(client, String:zone[])
 {
-	
 	if(!ValidPlayer(client))
 		return;
-	
-	//PrintToConsole(client, "Left Zone: %s", zone);
+
 	if(StrContains(zone, "onlymelee", false) != 0) return;
 	{
-	TF2_SwitchtoSlot(client, TFWeaponSlot_Melee);
-	TF2_AddCondition(client, TFCond_RestrictToMelee);
-	onlymelee[client] = true;
+		TF2_SwitchtoSlot(client, TFWeaponSlot_Melee);
+		TF2_AddCondition(client, TFCond_RestrictToMelee);
+		onlymelee[client] = true;
 	}
 	
 	
@@ -62,14 +56,11 @@ public Zone_OnClientLeave(client, String:zone[])
 {
 	if(!ValidPlayer(client))
 		return;
-	
-	//PrintToConsole(client, "Join Zone: %s", zone);
 	if(StrContains(zone, "onlymelee", false) != 0) return;
 	{
-	
-	TF2_RemoveCondition(client, TFCond_RestrictToMelee);
-	onlymelee[client] = false;
-	TF2_SwitchtoSlot(client, TFWeaponSlot_Primary);
+		TF2_RemoveCondition(client, TFCond_RestrictToMelee);
+		onlymelee[client] = false;
+		TF2_SwitchtoSlot(client, TFWeaponSlot_Primary);
 	}
 }
 
